@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const { Schema } = mongoose
 
-const userSchema = new Schema({
+const userSchema = mongoose.Schema({
 
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
     email: {
@@ -39,4 +38,4 @@ const userSchema = new Schema({
 })
 
 
-module.export = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema);
