@@ -21,8 +21,7 @@ const tempUser = {
 // route for logging in and getting your auth token
 router.post('/', async (req, res) => {
 
-    // find user in database
-
+    // find user in database and checking that it exists
     const user = tempUser; // temporary
     // const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(400).send("Email doesn't exist")
@@ -59,10 +58,9 @@ router.post('/check', async (req, res) => {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, payload) => {
         if (err) return res.json(err)
 
-        console.log(payload)
+        console.log(payload.user.role)
     })
 
-    console.log(token)
     res.send("TEST - getting the token from header: " + token)
 })
 
