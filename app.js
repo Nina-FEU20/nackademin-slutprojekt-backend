@@ -4,9 +4,11 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
+const cookieParser = require('cookie-parser')
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 //import routes
 const authRoute = require('./routes/authRoute')
@@ -15,7 +17,7 @@ const authRoute = require('./routes/authRoute')
 app.use('/api/auth', authRoute)
 
 // connection to MY LOCAL DATABASE / Nina
-mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'SinusWebshop' })
+mongoose.connect(process.env.MONGODB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'Sinus' })
     .then(() => {
         console.log("Connected to db")
     })
