@@ -13,14 +13,16 @@ app.use(cookieParser())
 //import routes
 const authRoute = require('./routes/authRoute')
 const productRoute = require('./routes/productRoute')
+const productRoute2 = require('./routes/productRoute2')
 
 // routes
 app.use('/api/auth', authRoute)
 
 app.use('/api/products', productRoute)
+app.use('/api/products', productRoute2)
 
 // connection to MY LOCAL DATABASE / Nina
-mongoose.connect(process.env.MONGODB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'Sinus' })
+mongoose.connect(process.env.MONGODB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, dbName: 'Sinus' })
     .then(() => {
         console.log("Connected to db")
     })
