@@ -1,3 +1,31 @@
+const mongoose = require('mongoose')
+const router = require('express').Router()
+const Product = require('../models/product')
+
+//Routes
+
+router.post('/', (req,res) => {
+    const newProduct = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        title: req.body.title,
+        price: req.body.price,
+        shortDesc: req.body.shortDesc,
+        longDesc: req.body.longDesc,
+        imgFile: req.body.imgFile
+    })
+    newProduct.save((err) => {
+        if(err){
+            console.error(err)
+        } else{
+            console.log('The new product has been saved')
+        }
+    })
+})
+
+
+
+module.exports = router
+
 /* 
 const products = [
     {
