@@ -9,7 +9,7 @@ const tempUser = {
     email: 'johan.kivi@zocom.se',
     password: '$$$hashed password$$$',
     name: 'Johan Kivi',
-    role: 'admin', // or customer
+    role: 'customer', // or customer
     adress: {
         street: 'Tokitokvägen 3',
         zip: '123 45',
