@@ -7,4 +7,4 @@ require('dotenv').config()
 
 app.use(express.static('public'))
 
-module.exports = {app, mongoose}
+module.exports = app
