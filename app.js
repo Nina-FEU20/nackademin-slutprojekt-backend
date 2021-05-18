@@ -12,9 +12,12 @@ app.use(cookieParser())
 
 //import routes
 const authRoute = require('./routes/authRoute')
+const productRoute = require('./routes/productRoute')
 
 // routes
 app.use('/api/auth', authRoute)
+
+app.use('/api/products', productRoute)
 
 // connection to MY LOCAL DATABASE / Nina
 mongoose.connect(process.env.MONGODB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'Sinus' })
