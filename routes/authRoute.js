@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-
+const User = require('../models/user')
 
 // temporary user
 const tempUser = {
@@ -21,8 +21,9 @@ const tempUser = {
 // route for logging in and getting your auth token
 router.post('/', async (req, res) => {
 
-    // find user in database
+    console.log(req.body)
 
+    // find user in database and checking that it exists
     const user = tempUser; // temporary
     // const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(400).send("Email doesn't exist")
@@ -50,7 +51,19 @@ router.post('/', async (req, res) => {
     const token = await jwt.sign(payload, process.env.TOKEN_SECRET);
     res.cookie('auth-token', token)
     res.json({ user, token })
+})
 
+// // just for checking that I get the token for now
+router.post('/check', async (req, res) => {
+    const token = req.cookies['auth-token']
+
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, payload) => {
+        if (err) return res.json(err)
+
+        console.log(payload.user.role)
+    })
+
+    res.send("TEST - getting the token from header: " + token)
 })
 
 module.exports = router;
