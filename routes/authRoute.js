@@ -9,7 +9,7 @@ const tempUser = {
     email: 'johan.kivi@zocom.se',
     password: '$$$hashed password$$$',
     name: 'Johan Kivi',
-    role: 'customer', // or customer
+    role: 'admin', // or customer
     adress: {
         street: 'Tokitokvägen 3',
         zip: '123 45',
@@ -20,6 +20,8 @@ const tempUser = {
 
 // route for logging in and getting your auth token
 router.post('/', async (req, res) => {
+
+    console.log(req.body)
 
     // find user in database and checking that it exists
     const user = tempUser; // temporary
