@@ -24,8 +24,7 @@ router.post('/', async (req, res) => {
     console.log(req.body)
 
     // find user in database and checking that it exists
-    const user = tempUser; // temporary
-    // const user = await User.findOne({ email: req.body.email })
+    const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(400).send("Email doesn't exist")
 
     // checking if the password matches the hashed password in the database
@@ -35,6 +34,7 @@ router.post('/', async (req, res) => {
 
 
     const payload = {
+        exp: Math.floor(Date.now() / 1000) + (60 * 60),
         user: {
             email: user.email,
             name: user.name,
