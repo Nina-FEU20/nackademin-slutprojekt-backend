@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Name is required'],
-        match: [/^[a-zA-Z]+$/, 'Only letters allowed']
+        match: [/^[a-zA-Z\s]*$/, 'Alphabetical characters only']
     },
     role: String,
 
