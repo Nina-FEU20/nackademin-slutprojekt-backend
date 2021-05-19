@@ -17,9 +17,12 @@ const authRoute = require('./routes/authRoute')
 const productRoute = require('./routes/productRoute')
 const productRoute2 = require('./routes/productRoute2')
 const registerRoute = require('./routes/registerRoute')
+const orderRoute = require('./routes/orderRoute')
 
 // routes
 app.use('/api/auth', authRoute)
+app.use('/api/orders', orderRoute)
+app.use('/api/products', productRoute)
 
 app.use('/api/products', productRoute)
 app.use('/api/products', productRoute2)

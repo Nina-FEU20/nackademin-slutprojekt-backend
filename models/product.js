@@ -9,4 +9,5 @@ const productSchema = mongoose.Schema({
     imgFile: {type: String, required:true}
 })
 
+
 module.exports = mongoose.model('Products', productSchema)
