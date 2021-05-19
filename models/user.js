@@ -36,8 +36,4 @@ const userSchema = new Schema({
     })
 
 
-<<<<<<< Updated upstream
-modules.export = mongoose.model('User', userSchema)
-=======
 module.exports = mongoose.model('User', userSchema)
->>>>>>> Stashed changes
