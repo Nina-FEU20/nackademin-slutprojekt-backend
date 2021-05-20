@@ -1,9 +1,9 @@
 const router = require('express').Router()
 const Product = require('../models/product')
-const verifyAccess = require('../verifyAccess')
+const { verifyIsAdmin } = require('../authentication')
 
 // verifyAccess is a middleware that runs before and needs to return a next(); for the rest of the function to run
-router.patch('/:id', verifyAccess, async (req, res) => {
+router.patch('/:id', verifyIsAdmin, async (req, res) => {
 
     // getting the chosen product and saving it to a seperate variable first. 
     // This because all fields in product is required so it can not be empty,
@@ -31,7 +31,7 @@ router.patch('/:id', verifyAccess, async (req, res) => {
     })
 })
 
-router.delete('/:id', verifyAccess, async (req, res) => {
+router.delete('/:id', verifyIsAdmin, async (req, res) => {
     // getting the product and deleting it 
     const deletedProduct = await Product.findByIdAndDelete(req.params.id)
     // if there is no product with this id
