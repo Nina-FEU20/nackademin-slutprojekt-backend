@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
 
 
+
 router.post('/', async (req, res) => {
-    // It checks and waits if there is any user logged in.
 
     // getting token from cookies 
     const token = req.cookies['auth-token'];
@@ -33,24 +33,21 @@ router.post('/', async (req, res) => {
                 items = items.split(" ")
             }
 
-            // mappar items för att hämta objectID
+            // mapping items to get the ObjectID
             items = items.map(prod => mongoose.Types.ObjectId(prod));
 
-            // if there is product from product list, then it will save to products.
+            // here it will find the specific ID inside items array in the order model with $in.
             const products = await Product.find({ _id: { $in: items } });
 
-            // if there is no products inside order, then status 400.
-            if (items.length !== products.length) {
-                // Do something
-                res.status(400);
-                return;
-            }
+            // if there is no products inside order, then status 400 else 202.
+            (items.length !== products.length) ? res.status(404) : res.status(202)
 
             // creating order from order models.
             let order = new Order({
                 timeStamp: Date.now(),
                 status: true,
                 items: products.map(prod => prod._id),
+                // products(which is a variable listed over this) so, in reduce it will check the total price of how many items entered the cart by id.
                 orderValue: products.reduce((total, prod) => total + prod.price, 0)
             });
 
@@ -92,6 +89,7 @@ router.get('/', async (req, res) => {
         // If it is customer you will see your order.
     } else if (user.role === 'customer') {
         const user = await User.findOne({ name: verifiedUser.user.name },
+            // if there is 1 in orderHistory it will connect, if its 0, it will not. populate calls the orderHistory field which references to the ObjectId in the document.
             { orderHistory: 1 }).populate('orderHistory');
         res.json(user.orderHistory);
     }
