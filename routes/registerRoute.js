@@ -33,43 +33,18 @@ router.post('/', async (req, res) => {
         user.save((err) => {
             if(err){
                 return res.status(400).json({
-                    success: {
-                        status: '',
-                        msg: ''
-                    },
-                    error: {
-                        status: 400,
-                        msg: 'User not added to database',
-                        err_msg: err,
-                    }
+                    error: 'User not added to database',
+                    msg: err
                     })
             }
             else {
-                return res.status(200).json({
-                    success: {
-                        status: 200,
-                        msg: 'User successfully added'
-                    },
-                    error: {
-                        status: '',
-                        msg: ''
-                    }
-                    })
+                return res.status(200).json({ success: 'User was added to database' })
             }
         })
      }
      else {
          // if email already exists, return error
-        return res.status(400).json({
-            success: {
-                status: '',
-                msg: ''
-            },
-            error: {
-                status: 400,
-                msg: 'Email already exists'
-            }
-            })
+        return res.status(400).json({ error: 'Email already exists' })
      }
 })
 
