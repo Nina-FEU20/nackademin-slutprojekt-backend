@@ -2,8 +2,6 @@ const router = require('express').Router();
 const User = require('../models/user');
 const Order = require('../models/order');
 const Product = require('../models/product');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken')
 const { verifyIsLoggedIn } = require('../authentication')
 
 
@@ -30,11 +28,7 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
     const user = await User.findOne({ name: req.verifiedUser.user.name });
 
 
-
-    // mapping items to get ObjectID
-    items = items.map(prod => mongoose.Types.ObjectId(prod));
-
-    // if there is product from product list, then it will save to products.
+    // it will check inside product model if the correct id to the product matches inside items in order model.
     const products = await Product.find({ _id: { $in: items } });
 
 
@@ -42,7 +36,8 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
     let order = new Order({
         timeStamp: Date.now(),
         status: true,
-        items: products.map(prod => prod._id),
+        // items: products.map(prod => prod._id),
+        items: items,
         orderValue: products.reduce((total, prod) => total + prod.price, 0)
     });
 
