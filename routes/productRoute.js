@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
 const router = require('express').Router()
 const Product = require('../models/product')
+const verifyIsAdmin = require('../authentication')
 
 //Routes
 
+//Frida
 
-router.post('/', (req, res) => {
+router.post('/', verifyIsAdmin, (req,res) => {
     const newProduct = new Product({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
@@ -15,10 +17,9 @@ router.post('/', (req, res) => {
         imgFile: req.body.imgFile
     })
     newProduct.save((err) => {
-
-        if (err) {
+        if(err){
             console.error(err)
-        } else {
+        } else{
             console.log('The new product has been saved')
             res.json('The new product has been saved')
         }
@@ -28,20 +29,27 @@ router.post('/', (req, res) => {
 
 router.get('/', async (req, res) => {
     const allProducts = await Product.find({})
+
     res.json(allProducts)
 })
 
-
 router.get('/:id', async (req, res) => {
-    const specProduct = await Product.find({ _id: req.params.id })
+    const specProduct = await Product.find({_id: req.params.id})
+    
     res.json(specProduct)
 })
+
+
+//Nina
+
+
+
 
 
 module.exports = router
 
 
-/*
+/* 
 const products = [
     {
         _id: '39y7gbbZk1u4ABnv',
