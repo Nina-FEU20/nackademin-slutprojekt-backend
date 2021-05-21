@@ -9,31 +9,34 @@ const { verifyIsLoggedIn } = require('../authentication')
 
 router.post('/', verifyIsLoggedIn, async (req, res) => {
 
-    console.log(req.verifiedUser)
+    // getting the items in the cart
+    let items = req.body.items;
+
+    // if statement for the cart, if its nothing inside === you can not submit order.
+    if(items === null || items === undefined) {
+        res.status(404).send('no items in cart');
+        // it ends here.
+        return;
+    }
+
+    // if items is equal to 0, which also means you can not submit order.
+    if (items.length === 0) {
+        res.status(404).send('no items in cart');
+        // it ends here.
+        return;
+    }
 
     // getting the logged in user using the req.verifiedUser that we get from the middleware verifyIsLoggedIn 
     const user = await User.findOne({ name: req.verifiedUser.user.name });
 
-    // getting the items in the cart
-    let items = req.body.items;
 
-    // if statement to convert into array if items is a string (Happens from postman/insomnia)
-    if (typeof (items) === "string") {
-        items = items.split(" ")
-    }
 
-    // mappar items för att hämta objectID
+    // mapping items to get ObjectID
     items = items.map(prod => mongoose.Types.ObjectId(prod));
 
     // if there is product from product list, then it will save to products.
     const products = await Product.find({ _id: { $in: items } });
 
-    // if there is no products inside order, then status 400.
-    if (items.length !== products.length) {
-        // Do something
-        res.status(400);
-        return;
-    }
 
     // creating order from order models.
     let order = new Order({
@@ -69,7 +72,8 @@ router.get('/', verifyIsLoggedIn, async (req, res) => {
         res.json(orders);
         // If it is customer you will see your order.
     } else if (user.role === 'customer') {
-        const user = await User.findOne({ name: verifiedUser.user.name },
+        const user = await User.findOne({ name: req.verifiedUser.user.name },
+             // if there is 1 in orderHistory it will connect, if its 0, it will not. populate calls the orderHistory field which references to the ObjectId in the document.
             { orderHistory: 1 }).populate('orderHistory');
         res.json(user.orderHistory);
     }
