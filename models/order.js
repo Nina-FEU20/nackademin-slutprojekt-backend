@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const orderSchema = mongoose.Schema({
     timeStamp: Date,
-    status: Boolean,
+    status: String,
     items: [
         {
             type: mongoose.Schema.Types.ObjectId,

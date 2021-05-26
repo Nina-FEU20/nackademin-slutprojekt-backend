@@ -35,7 +35,7 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
     // creating order from order models.
     let order = new Order({
         timeStamp: Date.now(),
-        status: true,
+        status: 'inProcess',
         items: items,
         // reduce looping through products, then it will return the total value of the price for the products in array, 0 = it begins from zero price.
         orderValue: products.reduce((total, prod) => total + prod.price, 0)
