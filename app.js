@@ -1,21 +1,17 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 require('dotenv').config()
 const cookieParser = require('cookie-parser')
 
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
 app.use(cookieParser())
 
 //import routes
 const authRoute = require('./routes/authRoute')
 const productRoute = require('./routes/productRoute')
-const productRoute2 = require('./routes/productRoute2')
 const registerRoute = require('./routes/registerRoute')
 const orderRoute = require('./routes/orderRoute')
 
@@ -23,10 +19,6 @@ const orderRoute = require('./routes/orderRoute')
 app.use('/api/auth', authRoute)
 app.use('/api/orders', orderRoute)
 app.use('/api/products', productRoute)
-
-app.use('/api/products', productRoute)
-app.use('/api/products', productRoute2)
-
 app.use('/api/register', registerRoute)
 
 // connection to MY LOCAL DATABASE / Nina
