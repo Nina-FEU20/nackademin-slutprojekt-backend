@@ -25,10 +25,10 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
     }
 
     // getting the logged in user using the req.verifiedUser that we get from the middleware verifyIsLoggedIn 
-    const user = await User.findOne({ name: req.verifiedUser.user.name });
+    const user = await User.findOne({ _id: req.verifiedUser.id });
 
 
-    // it will check inside product model if the correct id to the product matches inside items in order model.
+    // it will check through all the products and match the correct id for product you wish to buy.
     const products = await Product.find({ _id: { $in: items } });
 
 
@@ -36,8 +36,8 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
     let order = new Order({
         timeStamp: Date.now(),
         status: true,
-        // items: products.map(prod => prod._id),
         items: items,
+        // reduce looping through products, then it will return the total value of the price for the products in array, 0 = it begins from zero price.
         orderValue: products.reduce((total, prod) => total + prod.price, 0)
     });
 
@@ -59,7 +59,7 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
 router.get('/', verifyIsLoggedIn, async (req, res) => {
 
     // getting the user from database
-    const user = await User.findOne({ name: req.verifiedUser.user.name });
+    const user = await User.findOne({ _id: req.verifiedUser.id });
 
     // if it is admin or customer that is logged in. If it is admin you will have all orders.
     if (user.role === 'admin') {
@@ -67,7 +67,7 @@ router.get('/', verifyIsLoggedIn, async (req, res) => {
         res.json(orders);
         // If it is customer you will see your order.
     } else if (user.role === 'customer') {
-        const user = await User.findOne({ name: req.verifiedUser.user.name },
+        const user = await User.findOne({ _id: req.verifiedUser.id},
              // if there is 1 in orderHistory it will connect, if its 0, it will not. populate calls the orderHistory field which references to the ObjectId in the document.
             { orderHistory: 1 }).populate('orderHistory');
         res.json(user.orderHistory);
