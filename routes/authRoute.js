@@ -2,6 +2,7 @@ const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const { createToken, authEndPointResponse } = require('../authentication')
 
 // route for logging in and getting your auth token
 router.post('/', async (req, res) => {
@@ -14,28 +15,12 @@ router.post('/', async (req, res) => {
     const correctPassword = await bcrypt.compare(req.body.password, user.password)
     if (!correctPassword) return res.status(400).send('Invalid Password')
 
-    // filling the payload with information about the user, so we can reach it through the token later in other routes
-    const payload = {
-        exp: Math.floor(Date.now() / 1000) + (60 * 60),
-        user: {
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            adress: {
-                street: user.adress.street,
-                zip: user.adress.zip,
-                city: user.adress.city
-            }
-        }
-    }
+    // creating token with help of function createToken
+    const token = await createToken(user, res)
+    // creating a auth-end response to send to frontend
+    const response = await authEndPointResponse(user.email, token)
+    res.json(response)
 
-    // create and assign a token
-    const token = await jwt.sign(payload, process.env.TOKEN_SECRET);
-    // setting the token as a cookie
-    res.cookie('auth-token', token)
-    // getting the user again, but this time excluding the password by passing a projection parameter (Because we dont want to send password to frontend)
-    const userWithoutPassword = await User.findOne({ email: user.email }, "-password")
-    res.json({ user: userWithoutPassword, token: token })
 })
 
 
