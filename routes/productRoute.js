@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
     res.json(allProducts)
 })
 
-//Ta bort?
+//would fetch one single product based on id with the find() method.
 router.get('/:id', async (req, res) => {
     const specProduct = await Product.find({ _id: req.params.id })
 
