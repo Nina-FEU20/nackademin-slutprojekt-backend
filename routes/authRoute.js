@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
-const { createToken, authEndPointResponse } = require('../authentication')
+const { createToken, authEndPointResponse } = require('../authentication/authFunctions')
 
 // route for logging in and getting your auth token
 router.post('/', async (req, res) => {
@@ -19,7 +19,6 @@ router.post('/', async (req, res) => {
     // creating a auth-end response to send to frontend
     const response = await authEndPointResponse(user.email, token)
     res.json(response)
-
 })
 
 

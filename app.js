@@ -5,8 +5,11 @@ require('dotenv').config()
 const cookieParser = require('cookie-parser')
 
 app.use(express.static('public'))
+// So we can read information that sends in as json
 app.use(express.json())
+// So we can read information that sends in as urlencoded
 app.use(express.urlencoded({ extended: true }))
+// So we can parse the cookies
 app.use(cookieParser())
 
 //import routes
@@ -21,7 +24,7 @@ app.use('/api/orders', orderRoute)
 app.use('/api/products', productRoute)
 app.use('/api/register', registerRoute)
 
-// connection to MY LOCAL DATABASE / Nina
+// connection to our database
 mongoose.connect(process.env.MONGODB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, dbName: 'Sinus' })
     .then(() => {
         console.log("Connected to db")
