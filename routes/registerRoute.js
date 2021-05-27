@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const mongoose = require('mongoose')
 const router = express.Router()
-const { createToken, authEndPointResponse } = require('../authentication')
+const { createToken, authEndPointResponse } = require('../authentication/authFunctions')
 
 
 router.post('/', async (req, res) => {

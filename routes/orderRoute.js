@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../models/user');
 const Order = require('../models/order');
 const Product = require('../models/product');
-const { verifyIsLoggedIn } = require('../authentication')
+const { verifyIsLoggedIn } = require('../authentication/authMiddlewares')
 
 router.post('/', verifyIsLoggedIn, async (req, res) => {
 
@@ -16,22 +16,19 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
         return;
     }
 
-    // getting the logged in user using the req.verifiedUser that we get from the middleware verifyIsLoggedIn 
-    const user = await User.findOne({ _id: req.verifiedUser.id });
-
     try {
 
         // creating an empty array to push all itemprices in to 
-        const products = [];
+        const productPrices = [];
         for (let item of items) {
             // getting each product
             const product = await Product.find({ _id: item })
             // pushing every price into the array
-            products.push(product[0].price)
+            productPrices.push(product[0].price)
         }
 
-        // reduce looping through products, then it will return the total value of the price for the products in array, 0 = it begins from zero price.
-        let total = products.reduce((total, currentProduct) => {
+        // reduce looping through each price, then it will return the total value of the price for the prices in the array, 0 = it begins from zero price.
+        let total = productPrices.reduce((total, currentProduct) => {
             return total + currentProduct
         }, 0)
 
@@ -46,8 +43,12 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
         // Saving the order to database
         await order.save();
 
+        // getting the logged in user using the req.verifiedUser that we get from the middleware verifyIsLoggedIn 
+        const user = await User.findOne({ _id: req.verifiedUser.id });
+
         // orderHistory is inside user, so the order._id gets pushed into user.
         user.orderHistory.push(order._id);
+
         // saving the user again with the updated orderhistory
         user.save()
 
@@ -61,18 +62,16 @@ router.post('/', verifyIsLoggedIn, async (req, res) => {
 
 router.get('/', verifyIsLoggedIn, async (req, res) => {
 
-    // getting the user from database
-    const user = await User.findOne({ _id: req.verifiedUser.id });
+    // putting the users role into a variable
+    const role = req.verifiedUser.role
 
-    // if it is admin or customer that is logged in. If it is admin you will have all orders.
-    if (user.role === 'admin') {
+    // checking if role is admin or customer. Admin can see all orders, customer can see its own 
+    if (role === 'admin') {
         const orders = await Order.find();
         res.json(orders);
-        // If it is customer you will see your order.
-    } else if (user.role === 'customer') {
-        const user = await User.findOne({ _id: req.verifiedUser.id },
-            // if there is 1 in orderHistory it will connect, if its 0, it will not. populate calls the orderHistory field which references to the ObjectId in the document.
-            { orderHistory: 1 }).populate('orderHistory');
+    } else if (role === 'customer') {
+        // populate calls the orderHistory field which references to the ObjectId in the document.
+        const user = await User.findOne({ _id: req.verifiedUser.id }).populate('orderHistory');
         res.json(user.orderHistory);
     }
 });
