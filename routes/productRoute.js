@@ -38,6 +38,7 @@ router.get('/', async (req, res) => {
     res.json(allProducts)
 })
 
+//would fetch one single product based on id with the find() method.
 router.get('/:id', async (req, res) => {
     const specProduct = await Product.find({ _id: req.params.id })
     if (!specProduct) return res.send("No product found")
