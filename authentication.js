@@ -5,7 +5,7 @@ const User = require('./models/user')
 const createToken = async (user, res) => {
     // filling the payload with information about the user, so we can reach it through the token later in other routes
     const payload = {
-        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+        exp: Math.floor(Date.now() / 1000) + (60 * 60), // makes the token valid for one hour
         role: user.role,
         id: user._id,
     }
@@ -31,25 +31,23 @@ const verifyIsLoggedIn = async (req, res, next) => {
 
     // getting the current token from cookies
     const token = req.cookies['auth-token'];
-    if (!token) {
-        return res.status(401).json({ msg: "Access denied" })
-    }
+    if (!token) return res.status(401).send("Access denied")
 
     try {
         // verifying the token with the jwt-verifymethod by sending in the token and our secret
-        const verifiedUser = jwt.verify(token, process.env.TOKEN_SECRET);
+        const verifiedUser = await jwt.verify(token, process.env.TOKEN_SECRET);
         // sending the verifiedUser into the req-object, so wherever we use this middleware we can reach it
         req.verifiedUser = verifiedUser;
         next();
     } catch (err) {
-        res.status(401).json({ msg: err })
+        res.status(401).send(err.message)
     }
 }
 
 // Checks if a user has the role of admin
 const verifyIsAdmin = async (req, res, next) => {
     // checking if the user is admin, and if so, calling next() to move on to the next middleware/route - otherwise, the request will be left hanging. else, access is denied. 
-    req.verifiedUser.role !== "admin" ? res.status(401).json({ msg: 'Access denied. You are not admin' }) : next();
+    req.verifiedUser.role !== "admin" ? res.status(401).send('Access denied. You are not admin') : next();
 
 }
 
