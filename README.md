@@ -1,8 +1,12 @@
 Slutprojekt i kursen backend i NodeJS där vi skulle ska bygga en Backend till en webbshop med en färdig FrontEnd.
 Grupp-projekt där vi varit fyra stycken som jobbat tillsammans.  
-Jag har bidragit i mer eller mindre alla routes. 
-Haft helt eget ansvar för alla middlewares och autentisering, authRoute samt patch och delete i productRoute. 
+Jag har bidragit i mer eller mindre alla routes, men har haft helt eget ansvar för följande: 
+* Middlewares
+* Autentisering
+* AuthRoute samt patch & delete i productRoute. 
 
+Utöver de bidragit mycket i 
+* OrderRoute och RegisterRoute
 
 (Arbetssätt och bedömningskrav nedan stämmer ej överrens med de som var för vår kurs, utan har varit för någon annan skola tidigare) 
 ________________________________________________________________________
