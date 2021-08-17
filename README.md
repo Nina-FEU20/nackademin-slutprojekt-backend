@@ -3,7 +3,7 @@ Grupp-projekt där vi varit fyra stycken som jobbat tillsammans.
 Jag har bidragit i mer eller mindre alla routes, men har haft helt eget ansvar för följande: 
 * Middlewares
 * Autentisering
-* AuthRoute samt patch & delete i productRoute. 
+* AuthRoute samt patch & delete i ProductRoute. 
 
 Utöver de bidragit mycket i 
 * OrderRoute och RegisterRoute
